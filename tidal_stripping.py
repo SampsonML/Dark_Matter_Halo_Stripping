@@ -1,6 +1,35 @@
+##########################################################################################
+#
+# MOVING RADIUS FINDER
+# Info: 'moving_radius_finder' will track the mean radius,velocity, 
+# and center of mass of a moving satellite. 
+# 'Data' will be your hdf5 file
+# 'Mass_Percentage' is the fraction of mass you want to count as
+# the halo.
+# 'Shell_Amounts' simply defines the number of sherical bins to be used
+# for calculating the minimum radius containing XXXX fraction of the halo mass
+#
+# HALF MASS RADIUS INITIAL
+# 'half_mass_radiusInitial' simply inputs the hdf5 file as 'Data', and eliminates
+# the particles outside the initial half mass radius (input as HMR). To calculate
+# the initial half mass radius simply enter a mass fraction of 0.5 into the initial
+# hdf5 snapshot of 'moving_radius_finder' and return the mean radius.
+#
+# HALF MASS RADIUS ITER
+# 'half_mass_radius_iter' acts in the same way as 'half_mass_radiusInitial' except
+# takes the extra input parameter IDs, which is the particle IDs. The part IDs will 
+# be in the output from the previus function, 
+# ex: HMR_Initial = half_mass_radiusInitial(Data,HMR)
+#     HMR_Next_Snapshot = half_mass_radiusIter(Data,HMR,HMR_Initial[:,3])
+#     Since the part IDs are stored in the 4th column of the output from
+#     half_mass_radiusInitial
+#
+##########################################################################################
+
 import h5py
 import numpy as np
 import math
+
 
 # Radius finder function
 def moving_radius_finder(Data,Mass_Percentage,Shell_Amounts):
@@ -61,8 +90,8 @@ def moving_radius_finder(Data,Mass_Percentage,Shell_Amounts):
 
 # Radius finder function
 def half_mass_radiusInitial(Data,HMR):
-    """ A function for finding amount of particles
-    in an initial half-mass radius.
+    """ A function for finding initial half-mass radius
+    of a spherical dark matter halo.
     Works with hdf5 outputs from gadget snapshot files"""
 
     # Load in Coordinates
@@ -96,7 +125,7 @@ def half_mass_radiusInitial(Data,HMR):
 
 # Radius finder function
 def half_mass_radiusIter(Data,HMR,IDs):
-    """ A function for finding amount of particles
+    """ A function for iteritively finding amount of particles
     in an initial half-mass radius.
     Works with hdf5 outputs from gadget snapshot files"""
 
